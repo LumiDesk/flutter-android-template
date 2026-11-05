@@ -1,0 +1,95 @@
+name: Release
+
+# 推送 vX.Y.Z 标签时构建签名 APK 并创建预发布。
+# 发布说明是 Release 正文的唯一来源；缺文件在构建前就失败，不浪费一次签名构建。
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: '3.47.2'
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify release notes
+        run: |
+          NOTES="docs/release-notes/${GITHUB_REF_NAME}.md"
+          if [ ! -s "$NOTES" ]; then
+            echo "缺少发布说明：$NOTES（模板见 docs/dev/release.md）" >&2
+            exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Format, analyze, test
+        run: |
+          dart format --output=none --set-exit-if-changed .
+          flutter analyze
+          flutter test
+
+      # 签名材料不入库：每次发布从仓库 Secrets 解码到 signing/，用完即随 runner 销毁。
+      # 四个 Secret 的准备命令由 `dart run tool/signing.dart` 打印。
+      - name: Decode signing material
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "缺少仓库 Secret KEYSTORE_BASE64；先在本机跑 dart run tool/signing.dart" >&2
+            echo "并按其输出配置 Settings → Secrets and variables → Actions。" >&2
+            exit 1
+          fi
+          mkdir -p signing
+          echo "$KEYSTORE_BASE64" | base64 -d > signing/release.jks
+          printf 'storeFile=signing/release.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' \
+            "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" > signing/keystore.properties
+
+      # 只出 arm64：现役 Android 手机都是 64 位，单 ABI 能把包体积压下来。
+      - name: Build signed release APK
+        run: flutter build apk --release --target-platform android-arm64
+
+      - name: Rename artifact and checksum
+        run: |
+          APP_SLUG="${GITHUB_REPOSITORY##*/}"
+          cp build/app/outputs/flutter-apk/app-release.apk \
+             "${APP_SLUG}-${GITHUB_REF_NAME}.apk"
+          sha256sum "${APP_SLUG}-${GITHUB_REF_NAME}.apk" \
+             > "${APP_SLUG}-${GITHUB_REF_NAME}.apk.sha256"
+          cat "${APP_SLUG}-${GITHUB_REF_NAME}.apk.sha256"
+
+      - name: Create prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APP_SLUG="${GITHUB_REPOSITORY##*/}"
+          VERSION="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            "${APP_SLUG}-${GITHUB_REF_NAME}.apk" \
+            "${APP_SLUG}-${GITHUB_REF_NAME}.apk.sha256" \
+            --title "${APP_SLUG} ${VERSION}" \
+            --notes-file "docs/release-notes/${GITHUB_REF_NAME}.md" \
+            --prerelease

@@ -1,0 +1,67 @@
+{
+  "@@locale": "en",
+  "appName": "Tpl Starter",
+  "navHome": "Items",
+  "navSettings": "Settings",
+  "homeTitle": "All items",
+  "homeSubtitle": "{count, plural, =1{1 item} other{{count} items}}",
+  "@homeSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeEmptyTitle": "No items yet",
+  "homeEmptyDescription": "Use the button at the bottom right to add the first one.",
+  "homeEmptyAction": "Add item",
+  "itemDeleteConfirmTitle": "Delete this item?",
+  "itemDeleteConfirmMessage": "\"{title}\" will be deleted. This cannot be undone.",
+  "@itemDeleteConfirmMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "editorTitleNew": "New item",
+  "editorTitleEdit": "Edit item",
+  "fieldTitle": "Title",
+  "fieldTitleHint": "Name this item",
+  "fieldNote": "Note",
+  "fieldNoteHint": "Optional, multiple lines",
+  "settingsTitle": "Settings",
+  "sectionAppearance": "Appearance",
+  "sectionGeneral": "General",
+  "sectionAbout": "About",
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsAccent": "Accent",
+  "accentSystem": "System",
+  "accentBlue": "Blue",
+  "accentTeal": "Teal",
+  "accentGreen": "Green",
+  "accentAmber": "Amber",
+  "accentPink": "Pink",
+  "settingsLanguage": "Language",
+  "languageSystem": "System",
+  "languageChinese": "中文",
+  "languageEnglish": "English",
+  "settingsSecureScreen": "Block screenshots",
+  "settingsSecureScreenSubtitle": "Screenshots and screen recording show a black frame",
+  "settingsVersion": "Version",
+  "actionBack": "Back",
+  "actionAdd": "Add",
+  "actionSave": "Save",
+  "actionCancel": "Cancel",
+  "actionDelete": "Delete",
+  "actionEdit": "Edit",
+  "actionClose": "Close",
+  "errorStorageRead": "Could not read local data; showing an empty list",
+  "errorStorageWrite": "Save failed; your change may not be stored",
+  "errorTitleRequired": "Title cannot be empty",
+  "noticeSaved": "Saved",
+  "noticeDeleted": "Deleted"
+}

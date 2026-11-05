@@ -1,0 +1,69 @@
+name: Template smoke
+
+# 模板自己会腐烂：不跑的模板半年后就 build 不过了。
+# 这里用 init.dart 现生成一个项目，再对它跑完整的质量门禁。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # 每周一 03:00（UTC）跑一次，拦住依赖与工具链漂移。
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: '3.47.2'
+
+jobs:
+  generate:
+    name: Generate and verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      # 让 `dart run` 有 package config；生成出来的项目还要再 pub get 一次。
+      - name: Resolve template dependencies
+        run: flutter pub get
+
+      - name: Generate a project from this template
+        run: |
+          dart run tool/init.dart \
+            --name demo_app \
+            --app-name "Demo App" \
+            --org com.example \
+            --prefix Dm \
+            --output "${RUNNER_TEMP}/demo_app"
+
+      - name: Verify generated project
+        working-directory: ${{ runner.temp }}/demo_app
+        run: |
+          flutter pub get
+          dart format --output=none --set-exit-if-changed .
+          flutter analyze
+          flutter test
+          flutter build apk --debug
+
+      - name: Assert template-only files are gone
+        working-directory: ${{ runner.temp }}/demo_app
+        run: |
+          test ! -e tool/init.dart
+          test ! -e .github/workflows/template-smoke.yml
+          grep -q '^name: demo_app$' pubspec.yaml
+          if grep -r -q 'top\.talyra42' . --include='*.kts' --include='*.kt'; then
+            echo "生成后仍残留模板的组织名" >&2
+            exit 1
+          fi

@@ -1,0 +1,67 @@
+{
+  "@@locale": "zh",
+  "appName": "Tpl Starter",
+  "navHome": "条目",
+  "navSettings": "设置",
+  "homeTitle": "所有条目",
+  "homeSubtitle": "{count} 条",
+  "@homeSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeEmptyTitle": "还没有条目",
+  "homeEmptyDescription": "点右下角的按钮添加第一条。",
+  "homeEmptyAction": "添加条目",
+  "itemDeleteConfirmTitle": "删除这条？",
+  "itemDeleteConfirmMessage": "「{title}」将被删除，此操作不可撤销。",
+  "@itemDeleteConfirmMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "editorTitleNew": "新建条目",
+  "editorTitleEdit": "编辑条目",
+  "fieldTitle": "标题",
+  "fieldTitleHint": "给这条起个名字",
+  "fieldNote": "备注",
+  "fieldNoteHint": "可选，支持多行",
+  "settingsTitle": "设置",
+  "sectionAppearance": "外观",
+  "sectionGeneral": "通用",
+  "sectionAbout": "关于",
+  "settingsTheme": "主题",
+  "themeSystem": "跟随系统",
+  "themeLight": "浅色",
+  "themeDark": "深色",
+  "settingsAccent": "强调色",
+  "accentSystem": "跟随系统",
+  "accentBlue": "蓝",
+  "accentTeal": "青",
+  "accentGreen": "绿",
+  "accentAmber": "琥珀",
+  "accentPink": "粉",
+  "settingsLanguage": "语言",
+  "languageSystem": "跟随系统",
+  "languageChinese": "中文",
+  "languageEnglish": "English",
+  "settingsSecureScreen": "防截屏",
+  "settingsSecureScreenSubtitle": "开启后系统截屏与录屏会显示黑屏",
+  "settingsVersion": "版本",
+  "actionBack": "返回",
+  "actionAdd": "添加",
+  "actionSave": "保存",
+  "actionCancel": "取消",
+  "actionDelete": "删除",
+  "actionEdit": "编辑",
+  "actionClose": "关闭",
+  "errorStorageRead": "读取本地数据失败，已回退到空列表",
+  "errorStorageWrite": "保存失败，改动可能没有写入",
+  "errorTitleRequired": "标题不能为空",
+  "noticeSaved": "已保存",
+  "noticeDeleted": "已删除"
+}
