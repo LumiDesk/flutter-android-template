@@ -37,7 +37,7 @@ dart run tool/signing.dart        # 首次：生成 signing/release.jks + 属性
 | `KEY_ALIAS` | key 别名（默认 `app`） |
 | `KEY_PASSWORD` | key 口令 |
 
-- `release.yml` 只在打标签时解码这些 Secret；平时 CI 使用一次性临时密钥验证 release 编译链路。
+- `release.yml` 只在打标签时解码这些 Secret；`main` 上的 CI 使用一次性临时密钥验证 release 编译链路（PR 不构建 APK）。
 - 缺少 Secret 时工作流在“Decode signing material”一步明确失败，不会产出未签名包。
 - 本机 `flutter build apk --release` 需要 `signing/keystore.properties`，缺失时 Gradle 直接报错并提示跑 `tool/signing.dart`。
 

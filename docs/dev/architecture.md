@@ -8,7 +8,7 @@ pages/            UI：只读状态、只调 Controller
 app/app_controller.dart   权威状态（ChangeNotifier）：校验、编排、错误码
    ↓
 app/data/        存储：ItemsRepository（业务数据）、PreferencesStore（设备偏好）
-app/platform/    原生能力：NativeBridge（唯一 MethodChannel 入口）
+app/platform/    原生能力：NativeBridge 与 HomeWidget（MethodChannel 入口）
 ```
 
 - UI 不直接读写 `SharedPreferences`、文件或 MethodChannel。
@@ -54,7 +54,7 @@ Dart 侧只有两个入口，都走同一条 channel（`<包名>/native`）：
 
 ## 桌面小组件
 
-刻意**不用**「把 Flutter 渲染成图片塞进 RemoteViews」那类方案，也不在组件里起后台 isolate：
+组件不跑 Flutter：它只读一份由应用写好的摘要，用 RemoteViews 渲染。
 
 ```text
 Dart：数据变化 → HomeWidget.update(title, count, subtitle)
@@ -71,6 +71,8 @@ RemoteViews：onUpdate / onEnabled 读摘要 → 渲染 3 个 TextView
 - 文案：组件里的静态文字是 Android 资源，不跟随 Flutter 的 `languageCode`；需要多语言就加
   `res/values-en/strings.xml`，别试图复用 ARB。
 - 添加/删除组件由系统处理，应用不需要知道实例数量。
+- 为什么不用 Flutter 渲染 / 第三方组件库：见
+  [`.agents/notes/implemented/2026-11-05-home-widget-approach.md`](../../.agents/notes/implemented/2026-11-05-home-widget-approach.md)。
 
 ## 加一条原生能力
 

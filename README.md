@@ -65,7 +65,7 @@
    输出里直接给出 `gh secret set` 命令。没配 Secret 时 `release.yml` 会在解码签名
    那一步明确失败，不会产出未签名包。
 
-5. 提交并推送。CI 会跑格式、analyze、测试、l10n 一致性、debug APK 与 release APK。
+5. 提交并推送。PR 上 CI 跑格式、analyze 与测试；合并到 `main` 后会额外签名构建一次 release APK。
 
 ## 直接试用
 
@@ -115,11 +115,14 @@ lib/
 ├── pages/                       app_shell / home / settings / sheets / log_page
 └── l10n/                        中英 ARB + 生成物
 android/                         原生桥、桌面小组件、Manifest、Gradle 签名读取
+.github/                         CI、release、模板自检与 PR / dependabot 配置
 scripts/                         doctor、publish 与共用 cli/environment
 tool/                            init（改名）、signing（密钥）
+signing/                         签名材料（只有 README 与示例入库）
 test/                            单元测试 + widget 测试
 docs/                            当前事实：设计系统、架构、测试、发版
 .agents/notes/                   设计与决策记录（为什么这么定、否掉了什么）
+.agents/skills/                  固化流程（发版）
 ```
 
 ## 刻意不带什么
@@ -147,12 +150,18 @@ docs/                            当前事实：设计系统、架构、测试�
 
 ## 首次配置清单
 
+从前模板建出的新项目：
+
 - [ ] `dart run tool/init.dart ...` 初始化标识
 - [ ] `dart run tool/signing.dart` 生成签名，并按输出配好四个 Secret
-- [ ] 在 GitHub 仓库设置里勾上 **Template repository**
 - [ ] 把 README 的功能表、`AGENTS.md` 的项目描述改成这个 App 的真实内容
 - [ ] 改 Android 启动图标（`android/app/src/main/res/mipmap-*`）与启动底色
 - [ ] 第一次发版前写好 `CHANGELOG.md` 与 `docs/release-notes/vX.Y.Z.md`
+
+只在**本仓库**（模板本身）要做的事：
+
+- [ ] 仓库设置里勾上 **Template repository**
+- [ ] 合并后自动删分支、只允许 merge commit、开启 secret scanning 与 dependabot 安全更新
 
 ## 维护这份模板
 

@@ -28,7 +28,7 @@ gh secret set KEY_ALIAS --body 'app'
 gh secret set KEY_PASSWORD --body '<口令>'
 ```
 
-`release.yml` 只在打 `vX.Y.Z` 标签时解码这些 Secret；平时的 CI 用一次性临时密钥
+`release.yml` 只在打 `vX.Y.Z` 标签时解码这些 Secret；`main` 上的 CI 用一次性临时密钥
 验证 release 构建链路，不碰你的真实密钥。
 
 ## 注意

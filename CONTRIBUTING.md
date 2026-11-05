@@ -23,7 +23,9 @@ flutter gen-l10n
 模板的每次改动都会被所有未来项目继承，因此：
 
 1. 只加「每个新 App 都要、且与业务无关」的东西；业务相关的一律不进。
-2. 跑一次生成验证（等价于 `template-smoke.yml`）：
+2. PR 上 CI 只做静态检查与测试；**合并到 `main` 之后才会真正构建一次 release APK**，
+   所以合并后要确认 `main` 的 CI 通过（尤其是动了 Gradle、Manifest 或原生代码时）。
+3. 跑一次生成验证（等价于 `template-smoke.yml`）：
 
    ```bash
    dart run tool/init.dart --name demo_app --app-name "Demo App" \

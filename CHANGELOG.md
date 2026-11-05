@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+- 设置页新增「应用日志」：查看 `AppLogger` 的内存缓冲（最近 200 条），可选中复制。
+- PR 上的 CI 不再构建 APK（约 1 分钟出结果）；`main` 合并后仍会签名构建一次 release APK，
+  并复用 Gradle 缓存，热缓存下 2–3 分钟。
+- 新增 `docs/dev/new-project.md`：从模板开新项目的完整步骤（参数、签名 Secret、首次提交）。
+- 新增 PR 模板与 dependabot 配置（分组更新，每周最多一个 PR）。
+
 ## [0.1.0] - 2026-11-05
 
 - 首个版本：Flutter Android 骨架、中英双语、设计令牌与通用组件、CI/发版工作流、

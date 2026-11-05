@@ -34,9 +34,11 @@ lib/
 ├── pages/                      # app_shell / home / settings / sheets / log_page
 ├── l10n/                       # 中英 ARB 与已提交的 gen-l10n 产物
 android/                        # 原生桥、桌面小组件、Manifest、Gradle 签名读取
+.github/                        # ci / release / template-smoke 与 PR、dependabot 配置
 .agents/skills/                 # 固化流程（release：合并→发版→等 CI→汇报）
 scripts/                        # doctor、publish 与共用 cli/environment
 tool/                           # init（改名）、signing（密钥）
+signing/                        # 签名材料（只有 README 与示例入库）
 test/                           # 单元测试与 widget 测试
 docs/                           # 当前事实：设计系统、架构、测试、发版
 .agents/notes/                  # 设计与决策记录（为什么这么定、否掉了什么）
@@ -146,7 +148,10 @@ dart run tool/signing.dart
 
 ## 7. CI 与发版
 
-- `.github/workflows/ci.yml`：push / PR 跑格式、l10n 一致性、analyze、测试与覆盖率、debug APK、release APK（用一次性临时密钥验证 R8 链路）。
+- `.github/workflows/ci.yml`：PR 只跑格式、l10n 一致性、analyze、测试与覆盖率；
+  `main`（或手动触发）额外用一次性临时密钥构建 release APK，验证 Manifest / Kotlin / R8 链路。
+  Gradle 依赖与任务缓存跨运行复用（`gradle/actions/setup-gradle`）。取舍见
+  [`.agents/notes/implemented/2026-11-05-ci-build-policy.md`](.agents/notes/implemented/2026-11-05-ci-build-policy.md)。
 - `.github/workflows/release.yml`：推送 `vX.Y.Z` 标签时从仓库 Secrets 解码签名材料，构建 arm64 APK，
   以 `docs/release-notes/vX.Y.Z.md` 为正文创建**预发布**；缺发布说明在构建前失败。
 - 发布结果是预发布，真机验收后手动提升为 Latest：`gh release edit vX.Y.Z --prerelease=false --latest`。
@@ -181,5 +186,6 @@ dart run tool/signing.dart
 - 新 UI 是否只用令牌？新增组件是否登记进 `docs/design/components.md`？
 - 错误是否有日志与用户反馈？异步后是否检查了 `mounted`？
 - 是否跑了 `dart format`、`flutter analyze`、`flutter test`？UI 改动是否在模拟器上看过？
+- 动了原生代码或 Gradle 时：PR 上不会构建 APK，**合并后要确认 `main` 的 CI 通过**。
 - 文档与注释是否同步？是否残留旧名称、旧路径或“历史叙述”？
 - 若改的是模板本身：`template-smoke.yml` 的等价流程（`init.dart` 生成 + analyze + test + build）是否仍然通过？
