@@ -41,12 +41,43 @@ app/platform/    原生能力：NativeBridge（唯一 MethodChannel 入口）
 4. 需要新错误/提示：在 `TplError` / `TplNotice` 加枚举值，`messages.dart` 的 switch 会编译失败提醒你补文案。
 5. 要挂到底部导航：在 `pages/app_shell.dart` 的 destinations 与 IndexedStack 各加一项。
 
+## 原生通道
+
+Dart 侧只有两个入口，都走同一条 channel（`<包名>/native`）：
+
+| Dart 入口 | 方法 | Android 侧 | 说明 |
+|---|---|---|---|
+| `NativeBridge.setSecureScreen` | `setSecureScreen` | `MainActivity` | 窗口加/清 `FLAG_SECURE` |
+| `HomeWidget.update` | `updateHomeWidget` | `MainActivity` → `HomeWidgetProvider` | 写摘要并刷新所有小组件实例 |
+
+约定：channel 名只出现在这两个 Dart 文件与 `MainActivity` 里；页面不直接碰 channel。
+
+## 桌面小组件
+
+刻意**不用**「把 Flutter 渲染成图片塞进 RemoteViews」那类方案，也不在组件里起后台 isolate：
+
+```text
+Dart：数据变化 → HomeWidget.update(title, count, subtitle)
+                    │ MethodChannel
+Android：MainActivity → HomeWidgetProvider.submitAndRefresh
+                    │ 写入自身 SharedPreferences
+RemoteViews：onUpdate / onEnabled 读摘要 → 渲染 3 个 TextView
+```
+
+- 数据单向：组件永远不回读 Flutter 状态，也不启动引擎。
+- 刷新时机由应用决定（数据变化、切语言、冷启动）；`updatePeriodMillis=0`，不做系统定时轮询。
+- 布局只允许 RemoteViews 支持的控件（`LinearLayout` / `TextView`），见
+  `android/app/src/main/res/layout/widget_home.xml`；禁止 Compose、自定义 View、动画、网络图。
+- 文案：组件里的静态文字是 Android 资源，不跟随 Flutter 的 `languageCode`；需要多语言就加
+  `res/values-en/strings.xml`，别试图复用 ARB。
+- 添加/删除组件由系统处理，应用不需要知道实例数量。
+
 ## 加一条原生能力
 
 1. Android 侧：在 `android/app/src/main/kotlin/<org>/<name>/MainActivity.kt` 的 `MethodChannel` 里加 `call.method` 分支。
-2. Dart 侧：在 `lib/app/platform/native_bridge.dart` 加静态方法，捕获 `PlatformException` / `MissingPluginException` 并记日志。
+2. Dart 侧：在 `lib/app/platform/` 加静态方法，捕获 `PlatformException` / `MissingPluginException` 并记日志。
 3. 需要权限时同步 `AndroidManifest.xml`，并在 README 的功能表里写清楚用途。
-4. 更新本文档的“原生能力”清单与 `docs/design/components.md`（若引入新组件）。
+4. 同步本文档的“原生通道”表格与 `docs/design/components.md`（若引入新组件）。
 
 ## 存储格式
 

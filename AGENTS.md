@@ -29,11 +29,12 @@ lib/
 │   ├── models/                # item（示例领域）与 preferences
 │   ├── data/                  # items_repository、preferences_store
 │   ├── logging/               # AppLogger
-│   ├── platform/              # NativeBridge（唯一 MethodChannel 入口）
+│   ├── platform/              # NativeBridge 与 HomeWidget（MethodChannel 入口）
 │   └── common_widgets_*.dart  # 通用组件，按 part 拆在 common_widgets.dart 下
 ├── pages/                      # app_shell / home / settings / sheets
 ├── l10n/                       # 中英 ARB 与已提交的 gen-l10n 产物
-android/                        # 原生桥、Manifest、Gradle 签名读取
+android/                        # 原生桥、桌面小组件、Manifest、Gradle 签名读取
+.agents/skills/                 # 固化流程（release：合并→发版→等 CI→汇报）
 scripts/                        # doctor、publish 与共用 cli/environment
 tool/                           # init（改名）、signing（密钥）
 test/                           # 单元测试与 widget 测试
@@ -62,7 +63,8 @@ CLAUDE.md                       # 一行指向 AGENTS.md，别改
 - `docs/design/components.md`：组件与弹层 helper 注册表；写新 Widget 前先查。
 - `docs/dev/architecture.md`：分层、数据流、如何加一个页面或原生能力。
 - `docs/dev/testing.md`：测试分层、覆盖率口径与模拟器验收清单。
-- `docs/dev/release.md`：版本号、签名 Secret、发布流程与检查清单。
+- `docs/dev/release.md`：版本号、签名 Secret、发布规则与检查清单。
+- `.agents/skills/release/SKILL.md`：**发版的可执行流程**（合并、清理分支、publish、等 CI、处置失败、汇报）。
 - `docs/dev/android-development.md`：环境搭建、常用命令、已知故障。
 - `docs/release-notes/vX.Y.Z.md`：Release 正文唯一来源。
 - `.agents/notes/`：设计稿、技术选型、被否决的方案。**不是当前事实**，只记来龙去脉；
@@ -147,7 +149,8 @@ dart run tool/signing.dart
 - `.github/workflows/release.yml`：推送 `vX.Y.Z` 标签时从仓库 Secrets 解码签名材料，构建 arm64 APK，
   以 `docs/release-notes/vX.Y.Z.md` 为正文创建**预发布**；缺发布说明在构建前失败。
 - 发布结果是预发布，真机验收后手动提升为 Latest：`gh release edit vX.Y.Z --prerelease=false --latest`。
-- 发版必须得到用户明确授权；入口只有 `dart run scripts/publish.dart patch|minor|major`，流程见 `docs/dev/release.md`。
+- 发版必须得到用户明确授权；入口只有 `dart run scripts/publish.dart patch|minor|major`，
+  完整流程按 `.agents/skills/release/SKILL.md` 执行，规则与检查清单见 `docs/dev/release.md`。
 - `.github/workflows/template-smoke.yml` 只在本仓库有意义（生成新项目并验证）；初始化后会随 `tool/init.dart` 一起删除。
 
 ## 8. Never 规则

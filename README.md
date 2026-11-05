@@ -66,6 +66,15 @@
 
 5. 提交并推送。CI 会跑格式、analyze、测试、l10n 一致性、debug APK 与 release APK。
 
+## 直接试用
+
+不想先建项目？[Releases](https://github.com/LumiDesk/flutter-android-template/releases) 里有模板自己打出的
+arm64 APK，装到 Android 8.0+ 手机上就能看到实际效果：条目增删改、明暗主题、中英文切换、
+防截屏开关、桌面小组件。
+
+- 只发 arm64：其它架构请克隆后自行 `flutter build apk`，或按 ABI 分包，不要打通用包。
+- 这是演示应用，数据只存在本机，没有账号、没有云同步。
+
 ## 自带什么
 
 | 层 | 内容 |
@@ -76,11 +85,13 @@
 | 状态 | `ChangeNotifier` + `InheritedNotifier`（`TplController` / `TplScope` / `TplState`），错误与提示用枚举码 |
 | 本地化 | 中英 ARB（中文为模板源）、`flutter gen-l10n` 产物入库、跟随系统/手动切换 |
 | 原生桥 | 一条 `MethodChannel` 示例：`FLAG_SECURE` 防截屏，Dart 侧集中在 `NativeBridge` |
+| 小组件 | 一个原生桌面小组件示例（`AppWidgetProvider` + `RemoteViews`）：显示条目数与摘要，点击回应用，数据由 Dart 单向推送 |
 | 存储 | 带 `schemaVersion` 的 JSON 存储示例（`ItemsRepository`）+ 偏好存储；损坏数据有明确异常类型 |
 | 反馈 | 统一轻反馈宿主 `TplFeedbackHost`；弹层统一 `showTplSheet`/`showTplConfirm`/`showTplTextInput` |
 | 脚本 | `tool/init.dart`（改名）、`tool/signing.dart`（签名）、`scripts/doctor.dart`（环境自检）、`scripts/publish.dart`（发版） |
 | CI/CD | `ci.yml`（门禁 + 双 APK）、`release.yml`（tag → 签名 APK + 预发布）、`template-smoke.yml`（模板自检） |
 | 文档 | README、AGENTS.md、SECURITY、设计系统、组件注册表、架构、测试、发版规范、发布说明模板、`.agents/notes` 决策记录 |
+| 流程 | `.agents/skills/release/SKILL.md`：合并 → 清理分支 → 发版 → 等 CI → 验收 → 汇报，一条固化路径 |
 
 ## 目录
 
@@ -97,11 +108,11 @@ lib/
 │   ├── models/                  item（示例领域）与 preferences
 │   ├── data/                    items_repository、preferences_store
 │   ├── logging/                 AppLogger
-│   ├── platform/                NativeBridge（唯一 MethodChannel 入口）
+│   ├── platform/                NativeBridge 与 HomeWidget（MethodChannel 入口）
 │   └── common_widgets_*.dart    按域拆分的通用组件（part of common_widgets.dart）
 ├── pages/                       app_shell / home / settings / sheets
 └── l10n/                        中英 ARB + 生成物
-android/                         原生桥、Manifest、Gradle 签名读取
+android/                         原生桥、桌面小组件、Manifest、Gradle 签名读取
 scripts/                         doctor、publish 与共用 cli/environment
 tool/                            init（改名）、signing（密钥）
 test/                            单元测试 + widget 测试

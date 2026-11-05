@@ -360,17 +360,13 @@ void _renameKotlinPackage(
   if (oldDir.path.replaceAll('\\', '/') == newDir.path.replaceAll('\\', '/')) {
     return;
   }
-  newDir.createSync(recursive: true);
-  for (final entry in oldDir.listSync()) {
-    if (entry is! File) continue;
-    final name = entry.path.replaceAll('\\', '/').split('/').last;
-    entry.copySync('${newDir.path}/$name');
-    entry.deleteSync();
-  }
+  // 递归复制：包目录下可能还有子包（例如 widget/）。
+  _copyDirRecursive(oldDir, newDir);
+  oldDir.deleteSync(recursive: true);
   print('Kotlin 包目录 -> ${newDir.path.replaceAll('\\', '/')}');
 
   // 清掉迁移后留下的空包目录，遇到非空目录或 kotlin 根就停。
-  var cursor = oldDir;
+  var cursor = oldDir.parent;
   final stop = kotlinRoot.absolute.path;
   while (cursor.path.replaceAll('\\', '/') != stop.replaceAll('\\', '/') &&
       cursor.existsSync()) {
@@ -378,6 +374,18 @@ void _renameKotlinPackage(
     final parent = cursor.parent;
     cursor.deleteSync();
     cursor = parent;
+  }
+}
+
+void _copyDirRecursive(Directory from, Directory to) {
+  to.createSync(recursive: true);
+  for (final entry in from.listSync()) {
+    final name = entry.path.replaceAll('\\', '/').split('/').last;
+    if (entry is Directory) {
+      _copyDirRecursive(entry, Directory('${to.path}/$name'));
+    } else if (entry is File) {
+      entry.copySync('${to.path}/$name');
+    }
   }
 }
 

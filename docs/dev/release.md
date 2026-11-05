@@ -1,7 +1,9 @@
 # 发版规范
 
-发布是**用户可见的对外动作**：只有用户明确要求时才执行。本文件定义版本号、签名、发布说明与提升流程；
-唯一命令入口是 `dart run scripts/publish.dart`。
+发布是**用户可见的对外动作**：只有用户明确要求时才执行。本文件定义版本号、签名、发布说明与纪律；
+**可执行的分步流程见 [`.agents/skills/release/SKILL.md`](../../.agents/skills/release/SKILL.md)**
+（合并 → 清理分支 → 发版 → 等 CI → 处置失败 → 验收 → 汇报）。唯一命令入口是
+`dart run scripts/publish.dart`。
 
 ## 1. 版本号
 

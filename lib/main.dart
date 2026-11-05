@@ -12,6 +12,7 @@ import 'app/feedback.dart';
 import 'app/logging/app_logger.dart';
 import 'app/messages.dart';
 import 'app/models/preferences.dart';
+import 'app/platform/home_widget.dart';
 import 'app/platform/native_bridge.dart';
 import 'l10n/app_localizations.dart';
 import 'pages/app_shell.dart';
@@ -60,6 +61,8 @@ class _TplAppState extends State<TplApp> {
   void initState() {
     super.initState();
     widget.controller.addListener(_handleStateChange);
+    // 首帧后再推一次，保证「先加组件、后开应用」也能立刻看到数据。
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncHomeWidget());
   }
 
   @override
@@ -67,6 +70,22 @@ class _TplAppState extends State<TplApp> {
     widget.controller.removeListener(_handleStateChange);
     _feedback.dispose();
     super.dispose();
+  }
+
+  /// 把摘要推给桌面小组件。数据变化、切换语言、启动时都会走这里。
+  void _syncHomeWidget() {
+    if (!mounted) return;
+    final state = widget.controller.state;
+    if (state.status != TplStatus.ready) return;
+    final l10n = _localizations();
+    final count = state.items.length;
+    unawaited(
+      HomeWidget.update(
+        title: l10n.appName,
+        count: count,
+        subtitle: count == 0 ? l10n.homeEmptyTitle : l10n.homeSubtitle(count),
+      ),
+    );
   }
 
   /// 一次性提示与错误统一在这里消费：走轻反馈，然后清空状态里的标志。
@@ -82,6 +101,7 @@ class _TplAppState extends State<TplApp> {
       _feedback.show(errorText(l10n, state.error!));
       widget.controller.clearError();
     }
+    _syncHomeWidget();
   }
 
   AppLocalizations _localizations() {

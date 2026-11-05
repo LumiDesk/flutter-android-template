@@ -2,4 +2,10 @@
 <resources>
     <!-- 启动闪屏底色：与深色画布一致，避免进入 Flutter 前的白屏闪光。 -->
     <color name="launch_background">#FF101318</color>
+
+    <!-- 桌面小组件：RemoteViews 不支持主题色，只能用固定色值。 -->
+    <color name="widget_surface">#FF1A1F27</color>
+    <color name="widget_text">#FFF0F3F8</color>
+    <color name="widget_muted">#FF9AA6B8</color>
+    <color name="widget_accent">#FF8AB4F8</color>
 </resources>

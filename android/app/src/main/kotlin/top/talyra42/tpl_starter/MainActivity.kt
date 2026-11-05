@@ -4,11 +4,13 @@ import android.view.WindowManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import top.talyra42.tpl_starter.widget.HomeWidgetProvider
 
 /**
- * 原生能力的唯一入口：与 lib/app/platform/native_bridge.dart 一一对应。
+ * 原生能力的唯一入口：与 lib/app/platform/ 下的 Dart 桥一一对应。
  *
- * 新增方法时同步三处：这里、Dart 侧的 NativeBridge、docs/dev/architecture.md。
+ * 新增方法时同步三处：这里、Dart 侧（native_bridge.dart / home_widget.dart）、
+ * docs/dev/architecture.md 的通道表。
  */
 class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -24,6 +26,23 @@ class MainActivity : FlutterActivity() {
                             window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                         }
                         result.success(null)
+                    }
+
+                    "updateHomeWidget" -> {
+                        val title = call.argument<String>("title")
+                            ?: getString(R.string.app_name)
+                        val count = call.argument<Int>("count") ?: 0
+                        val subtitle = call.argument<String>("subtitle") ?: ""
+                        // AppWidgetManager 的调用统一切到主线程，避免在 Binder 线程碰 UI 组件。
+                        runOnUiThread {
+                            HomeWidgetProvider.submitAndRefresh(
+                                this,
+                                title,
+                                count,
+                                subtitle,
+                            )
+                            result.success(null)
+                        }
                     }
 
                     else -> result.notImplemented()
