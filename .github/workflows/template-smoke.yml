@@ -29,6 +29,9 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # 与 ci.yml 共用同一类缓存：生成的 demo 项目依赖同样的 Gradle 与插件。
+      - uses: gradle/actions/setup-gradle@v4
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -55,7 +58,7 @@ jobs:
           dart format --output=none --set-exit-if-changed .
           flutter analyze
           flutter test
-          flutter build apk --debug
+          flutter build apk --debug --target-platform android-arm64
 
       - name: Assert template-only files are gone
         working-directory: ${{ runner.temp }}/demo_app

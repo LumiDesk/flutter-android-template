@@ -30,6 +30,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # Gradle 依赖、wrapper 与任务缓存跨运行复用。首次仍需下载；
+      # 之后 debug + release 两次构建能省掉一半以上的时间。
+      - uses: gradle/actions/setup-gradle@v4
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -74,8 +78,9 @@ jobs:
 
       # Dart 层测试不会编译 android/ 下的 Kotlin；这里额外构建一次 debug APK，
       # 提前拦住 MethodChannel、Manifest 与 Gradle 配置错误。
+      # 只出 arm64：调试包要的是「能装到手机上」，三 ABI 全打会让这一步慢一倍多。
       - name: Build debug APK
-        run: flutter build apk --debug
+        run: flutter build apk --debug --target-platform android-arm64
 
       # release 的 R8/资源裁剪只有发布时才会走到，CI 也构建一次，
       # 避免 release-only 崩溃拖到打 tag 才暴露。
