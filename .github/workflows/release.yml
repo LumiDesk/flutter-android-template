@@ -35,7 +35,7 @@ jobs:
           java-version: '17'
 
       # 发版只跑一次构建，缓存收益小一些；但依赖下载抖动时能少踩一次坑。
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - uses: subosito/flutter-action@v2
         with:

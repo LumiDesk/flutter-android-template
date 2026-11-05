@@ -30,7 +30,7 @@ jobs:
           java-version: '17'
 
       # 与 ci.yml 共用同一类缓存：生成的 demo 项目依赖同样的 Gradle 与插件。
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - uses: subosito/flutter-action@v2
         with:

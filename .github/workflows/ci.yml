@@ -32,7 +32,7 @@ jobs:
 
       # Gradle 依赖、wrapper 与任务缓存跨运行复用。首次仍需下载；
       # 之后 debug + release 两次构建能省掉一半以上的时间。
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - uses: subosito/flutter-action@v2
         with:
