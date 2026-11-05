@@ -9,6 +9,9 @@
 ![Flutter](https://img.shields.io/badge/Flutter-3.47.2-02569B?logo=flutter&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
+[![CI](https://github.com/LumiDesk/flutter-android-template/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/LumiDesk/flutter-android-template/actions/workflows/ci.yml)
+[![Template smoke](https://github.com/LumiDesk/flutter-android-template/actions/workflows/template-smoke.yml/badge.svg?branch=main)](https://github.com/LumiDesk/flutter-android-template/actions/workflows/template-smoke.yml)
+
 </div>
 
 ## 这是什么
