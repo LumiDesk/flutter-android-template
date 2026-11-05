@@ -320,6 +320,30 @@ abstract class AppLocalizations {
   /// **'开启后系统截屏与录屏会显示黑屏'**
   String get settingsSecureScreenSubtitle;
 
+  /// No description provided for @settingsLogs.
+  ///
+  /// In zh, this message translates to:
+  /// **'应用日志'**
+  String get settingsLogs;
+
+  /// No description provided for @settingsLogsSubtitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'只在内存里保留最近 200 条'**
+  String get settingsLogsSubtitle;
+
+  /// No description provided for @logsTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'应用日志'**
+  String get logsTitle;
+
+  /// No description provided for @logsEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'还没有日志'**
+  String get logsEmpty;
+
   /// No description provided for @settingsVersion.
   ///
   /// In zh, this message translates to:

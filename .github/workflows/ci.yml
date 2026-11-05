@@ -76,16 +76,16 @@ jobs:
           path: coverage/lcov.info
           if-no-files-found: ignore
 
-      # Dart 层测试不会编译 android/ 下的 Kotlin；这里额外构建一次 debug APK，
-      # 提前拦住 MethodChannel、Manifest 与 Gradle 配置错误。
-      # 只出 arm64：调试包要的是「能装到手机上」，三 ABI 全打会让这一步慢一倍多。
-      - name: Build debug APK
-        run: flutter build apk --debug --target-platform android-arm64
+      # ---- 以下只在 main（或手动触发）上跑：PR 只做静态检查与测试 ----
+      # 理由：APK 构建占 CI 总时长的大头，而 PR 的价值是「快速知道代码对不对」。
+      # 代价：Kotlin / Manifest / R8 的问题要等合并到 main 才暴露。
+      # 需要 PR 上也编译一次时，把这条 if 去掉即可。
 
-      # release 的 R8/资源裁剪只有发布时才会走到，CI 也构建一次，
+      # release 的 R8/资源裁剪只有发布时才会走到，这里构建一次，
       # 避免 release-only 崩溃拖到打 tag 才暴露。
       # 密钥每次现生成、用完即丢，只为验证编译链路；真正的发布签名见 release.yml。
       - name: Create ephemeral signing material
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
         run: |
           mkdir -p signing
           keytool -genkeypair -v -keystore signing/ci.jks -alias ci \
@@ -96,19 +96,20 @@ jobs:
             > signing/keystore.properties
 
       - name: Build release APK
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
         run: flutter build apk --release --target-platform android-arm64
 
       - name: Verify release APK
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
         run: |
           APK=build/app/outputs/flutter-apk/app-release.apk
           test -f "$APK"
           sha256sum "$APK" | tee "$APK.sha256"
 
-      - name: Upload APKs
+      - name: Upload release APK
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: |
-            build/app/outputs/flutter-apk/app-debug.apk
-            build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error

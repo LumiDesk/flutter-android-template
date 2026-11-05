@@ -133,6 +133,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Screenshots and screen recording show a black frame';
 
   @override
+  String get settingsLogs => 'App logs';
+
+  @override
+  String get settingsLogsSubtitle => 'Keeps the last 200 entries in memory';
+
+  @override
+  String get logsTitle => 'App logs';
+
+  @override
+  String get logsEmpty => 'No log entries yet';
+
+  @override
   String get settingsVersion => 'Version';
 
   @override

@@ -6,6 +6,7 @@ import '../app/app_version.dart';
 import '../app/models/preferences.dart';
 import '../common_widgets.dart';
 import '../l10n/app_localizations.dart';
+import 'log_page.dart';
 
 /// 设置页：主题、强调色、语言、防截屏、版本。
 ///
@@ -95,6 +96,17 @@ class SettingsPage extends StatelessWidget {
                       subtitle: l10n.settingsSecureScreenSubtitle,
                       value: preferences.secureScreen,
                       onChanged: controller.setSecureScreen,
+                    ),
+                    const TplRowDivider(),
+                    TplSettingsRow(
+                      icon: Icons.article_outlined,
+                      title: l10n.settingsLogs,
+                      subtitle: l10n.settingsLogsSubtitle,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (context) => const LogPage(),
+                        ),
+                      ),
                     ),
                   ],
                 ),

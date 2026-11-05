@@ -25,6 +25,7 @@
 ## 用法
 
 1. 在 GitHub 上点 **Use this template → Create a new repository**（或本地复制目录）。
+   完整步骤（五个必填参数、签名 Secret、首次提交）见 [docs/dev/new-project.md](docs/dev/new-project.md)。
 2. 在新的仓库根目录初始化标识：
 
    ```bash
@@ -88,8 +89,9 @@ arm64 APK，装到 Android 8.0+ 手机上就能看到实际效果：条目增删
 | 小组件 | 一个原生桌面小组件示例（`AppWidgetProvider` + `RemoteViews`）：显示条目数与摘要，点击回应用，数据由 Dart 单向推送 |
 | 存储 | 带 `schemaVersion` 的 JSON 存储示例（`ItemsRepository`）+ 偏好存储；损坏数据有明确异常类型 |
 | 反馈 | 统一轻反馈宿主 `TplFeedbackHost`；弹层统一 `showTplSheet`/`showTplConfirm`/`showTplTextInput` |
+| 日志 | `AppLogger` 内存环形缓冲（最近 200 条）+ 设置页内的只读日志页，侧载应用可在设备上自查 |
 | 脚本 | `tool/init.dart`（改名）、`tool/signing.dart`（签名）、`scripts/doctor.dart`（环境自检）、`scripts/publish.dart`（发版） |
-| CI/CD | `ci.yml`（门禁 + 双 APK）、`release.yml`（tag → 签名 APK + 预发布）、`template-smoke.yml`（模板自检） |
+| CI/CD | `ci.yml`（门禁；PR 只做静态检查与测试，main 上额外构建 release APK）、`release.yml`（tag → 签名 APK + 预发布）、`template-smoke.yml`（模板自检） |
 | 文档 | README、AGENTS.md、SECURITY、设计系统、组件注册表、架构、测试、发版规范、发布说明模板、`.agents/notes` 决策记录 |
 | 流程 | `.agents/skills/release/SKILL.md`：合并 → 清理分支 → 发版 → 等 CI → 验收 → 汇报，一条固化路径 |
 
@@ -110,7 +112,7 @@ lib/
 │   ├── logging/                 AppLogger
 │   ├── platform/                NativeBridge 与 HomeWidget（MethodChannel 入口）
 │   └── common_widgets_*.dart    按域拆分的通用组件（part of common_widgets.dart）
-├── pages/                       app_shell / home / settings / sheets
+├── pages/                       app_shell / home / settings / sheets / log_page
 └── l10n/                        中英 ARB + 生成物
 android/                         原生桥、桌面小组件、Manifest、Gradle 签名读取
 scripts/                         doctor、publish 与共用 cli/environment

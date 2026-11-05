@@ -31,7 +31,7 @@ lib/
 │   ├── logging/               # AppLogger
 │   ├── platform/              # NativeBridge 与 HomeWidget（MethodChannel 入口）
 │   └── common_widgets_*.dart  # 通用组件，按 part 拆在 common_widgets.dart 下
-├── pages/                      # app_shell / home / settings / sheets
+├── pages/                      # app_shell / home / settings / sheets / log_page
 ├── l10n/                       # 中英 ARB 与已提交的 gen-l10n 产物
 android/                        # 原生桥、桌面小组件、Manifest、Gradle 签名读取
 .agents/skills/                 # 固化流程（release：合并→发版→等 CI→汇报）
@@ -66,6 +66,7 @@ CLAUDE.md                       # 一行指向 AGENTS.md，别改
 - `docs/dev/release.md`：版本号、签名 Secret、发布规则与检查清单。
 - `.agents/skills/release/SKILL.md`：**发版的可执行流程**（合并、清理分支、publish、等 CI、处置失败、汇报）。
 - `docs/dev/android-development.md`：环境搭建、常用命令、已知故障。
+- `docs/dev/new-project.md`：从模板开新项目的完整步骤（五个参数、签名、首次提交）。
 - `docs/release-notes/vX.Y.Z.md`：Release 正文唯一来源。
 - `.agents/notes/`：设计稿、技术选型、被否决的方案。**不是当前事实**，只记来龙去脉；
   规则见 `.agents/notes/README.md`。

@@ -125,6 +125,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsSecureScreenSubtitle => '开启后系统截屏与录屏会显示黑屏';
 
   @override
+  String get settingsLogs => '应用日志';
+
+  @override
+  String get settingsLogsSubtitle => '只在内存里保留最近 200 条';
+
+  @override
+  String get logsTitle => '应用日志';
+
+  @override
+  String get logsEmpty => '还没有日志';
+
+  @override
   String get settingsVersion => '版本';
 
   @override
