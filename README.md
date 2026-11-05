@@ -80,7 +80,7 @@
 | 反馈 | 统一轻反馈宿主 `TplFeedbackHost`；弹层统一 `showTplSheet`/`showTplConfirm`/`showTplTextInput` |
 | 脚本 | `tool/init.dart`（改名）、`tool/signing.dart`（签名）、`scripts/doctor.dart`（环境自检）、`scripts/publish.dart`（发版） |
 | CI/CD | `ci.yml`（门禁 + 双 APK）、`release.yml`（tag → 签名 APK + 预发布）、`template-smoke.yml`（模板自检） |
-| 文档 | README、AGENTS.md、SECURITY、设计系统、组件注册表、架构、测试、发版规范、发布说明模板 |
+| 文档 | README、AGENTS.md、SECURITY、设计系统、组件注册表、架构、测试、发版规范、发布说明模板、`.agents/notes` 决策记录 |
 
 ## 目录
 
@@ -105,7 +105,8 @@ android/                         原生桥、Manifest、Gradle 签名读取
 scripts/                         doctor、publish 与共用 cli/environment
 tool/                            init（改名）、signing（密钥）
 test/                            单元测试 + widget 测试
-docs/                            设计与技术文档
+docs/                            当前事实：设计系统、架构、测试、发版
+.agents/notes/                   设计与决策记录（为什么这么定、否掉了什么）
 ```
 
 ## 刻意不带什么

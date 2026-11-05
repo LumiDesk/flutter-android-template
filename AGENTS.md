@@ -37,7 +37,9 @@ android/                        # 原生桥、Manifest、Gradle 签名读取
 scripts/                        # doctor、publish 与共用 cli/environment
 tool/                           # init（改名）、signing（密钥）
 test/                           # 单元测试与 widget 测试
-docs/                           # 设计与技术文档
+docs/                           # 当前事实：设计系统、架构、测试、发版
+.agents/notes/                  # 设计与决策记录（为什么这么定、否掉了什么）
+CLAUDE.md                       # 一行指向 AGENTS.md，别改
 ```
 
 ### 状态与数据流
@@ -63,6 +65,8 @@ docs/                           # 设计与技术文档
 - `docs/dev/release.md`：版本号、签名 Secret、发布流程与检查清单。
 - `docs/dev/android-development.md`：环境搭建、常用命令、已知故障。
 - `docs/release-notes/vX.Y.Z.md`：Release 正文唯一来源。
+- `.agents/notes/`：设计稿、技术选型、被否决的方案。**不是当前事实**，只记来龙去脉；
+  规则见 `.agents/notes/README.md`。
 
 ## 4. 文档同步
 
@@ -70,10 +74,13 @@ docs/                           # 设计与技术文档
 
 - 旧版本、旧实现、旧格式的说明，以及“迁移前/迁移后”的叙事；
 - 已删除的功能、旧名称、旧路径、旧依赖的残留引用；
-- 方案草稿、实施计划、评审记录、被否决的选项。
+- `docs/` 与 `README.md` 里的方案草稿、实施计划、评审记录、被否决的选项。
 
 具体规则：
 
+- 要写设计稿、备选方案或“为什么不这么做”时，去 `.agents/notes/proposed/`，不要写进 `docs/`。
+- 方案落地后：结论合并进 `docs/` 与 `README.md`，笔记移到 `.agents/notes/implemented/`，
+  只在笔记里补事实同步（路径、类名、默认值）。
 - 行为、依赖、目录、构建或发版流程变化时，在**同一个提交**内更新受影响的 `README.md`、`AGENTS.md`、`docs/` 与代码注释。
 - 删除功能时直接从文档、注释和注册表里删掉，不写“已移除/旧版兼容”说明；只有用户可见的变化才进 `CHANGELOG.md`。
 - 新增或改名可复用组件、纯函数时同步 `docs/design/components.md`；新增用户可见能力时同步 `README.md`。

@@ -452,6 +452,8 @@ flutter run -d emulator-5554
 ```
 
 - 代码规范、目录约定与完成前检查：见 [AGENTS.md](AGENTS.md)。
+- 设计稿与决策记录（为什么这么定、否掉了什么）：见
+  [.agents/notes/](.agents/notes/README.md)；`docs/` 只写当前事实。
 - 设计令牌与组件：见 [docs/design/design-system.md](docs/design/design-system.md) 与
   [docs/design/components.md](docs/design/components.md)。
 - 架构与分层：见 [docs/dev/architecture.md](docs/dev/architecture.md)。
