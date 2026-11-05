@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tpl Starter</string>
+
+    <!-- 桌面小组件。文案是静态的 Android 资源：组件本身不跑 Flutter，
+         跟随系统语言只能靠 values-zh/values-en 两套资源，见 docs/dev/architecture.md。 -->
+    <string name="widget_label">条目小组件</string>
+    <string name="widget_description">在主屏幕显示条目数量与摘要。</string>
+    <string name="widget_empty">还没有条目</string>
+</resources>

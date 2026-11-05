@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AppWidgetProviderInfo。
+     - updatePeriodMillis=0：不靠系统定时刷新，改为应用内数据变化时主动推送。
+     - 4x2 是默认尺寸；targetCellWidth/Height 只在 Android 12+ 生效，低版本用 minWidth/minHeight。 -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/widget_home"
+    android:minHeight="110dp"
+    android:minWidth="250dp"
+    android:previewLayout="@layout/widget_home"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="4"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />
