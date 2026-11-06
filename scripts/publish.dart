@@ -76,16 +76,33 @@ Future<void> _publish(List<String> args) async {
 
   _writeVersion(root, version, nextBuild);
 
+  // main 是受保护分支：发版提交必须走 PR，等检查通过后合并，最后在合并后的
+  // 历史上打 tag。直接 push main 会被分支保护拒绝。
+  final branch = 'release/v$version';
+  await run(<String>['git', 'checkout', '-b', branch]);
   await run(<String>['dart', 'format', '.']);
   await run(<String>['flutter', 'analyze']);
   await run(<String>['flutter', 'test']);
   await run(<String>['git', 'add', 'pubspec.yaml', 'lib/app/app_version.dart']);
   await run(<String>['git', 'commit', '-m', 'chore: release v$version']);
-  await run(<String>['git', 'tag', 'v$version']);
-  await run(<String>['git', 'push', 'origin', 'HEAD']);
+  final sha = await capture(<String>['git', 'rev-parse', 'HEAD']);
+  if (sha == null) {
+    throw ScriptException('取不到 release 提交的 SHA');
+  }
+
+  await run(<String>['git', 'push', '-u', 'origin', branch]);
+  await run(<String>['gh', 'pr', 'create', '--fill', '--base', 'main']);
+  info('等待 PR 检查通过（格式、analyze、测试都在 PR 上跑）…');
+  await run(<String>['gh', 'pr', 'checks', '--watch', '--interval', '20']);
+  await run(<String>['gh', 'pr', 'merge', '--merge', '--delete-branch']);
+
+  await run(<String>['git', 'checkout', 'main']);
+  await run(<String>['git', 'pull', '--ff-only']);
+  await run(<String>['git', 'branch', '-D', branch], allowFailure: true);
+  await run(<String>['git', 'tag', 'v$version', sha.trim()]);
   await run(<String>['git', 'push', 'origin', 'v$version']);
 
-  success('已推送 v$version，CI 会构建签名 APK 并创建预发布。');
+  success('已合并 PR 并推送 tag v$version，CI 会构建签名 APK 并创建预发布。');
   info('真机验收通过后提升为 Latest：');
   info('  gh release edit v$version --prerelease=false --latest');
 }

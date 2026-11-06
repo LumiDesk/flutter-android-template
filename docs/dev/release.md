@@ -16,9 +16,11 @@
   dart run scripts/publish.dart patch    # 或 minor / major
   ```
 
-- 脚本会依次：改 `pubspec.yaml` 与 `lib/app/app_version.dart` → `dart format` →
-  `flutter analyze` → `flutter test` → 提交 `chore: release vX.Y.Z` → 打 tag →
-  推送 `main` 与 tag。`--dry-run` 只打印版本并做必填项检查。
+- 脚本会依次：切出 `release/vX.Y.Z` 分支 → 改 `pubspec.yaml` 与 `lib/app/app_version.dart` →
+  `dart format` → `flutter analyze` → `flutter test` → 提交 `chore: release vX.Y.Z` →
+  推送分支 → 开 PR → 等 PR 检查 → 合并（merge commit）→ 回到 `main` → 打 tag → 推送 tag。
+  `--dry-run` 只打印版本并做必填项检查。
+- `main` 是受保护分支：要求 PR 且状态检查通过。**不要直接 `git push origin main`**。
 
 ## 2. 签名
 
