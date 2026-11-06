@@ -76,6 +76,21 @@ arm64 APK，装到 Android 8.0+ 手机上就能看到实际效果：条目增删
 - 只发 arm64：其它架构请克隆后自行 `flutter build apk`，或按 ABI 分包，不要打通用包。
 - 这是演示应用，数据只存在本机，没有账号、没有云同步。
 
+## 截图
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/home-light.png" width="200" alt="条目列表（浅色）" /><br /><sub>条目列表 · 浅色</sub></td>
+    <td align="center"><img src="docs/screenshots/home-dark.png" width="200" alt="条目列表（深色）" /><br /><sub>条目列表 · 深色</sub></td>
+    <td align="center"><img src="docs/screenshots/editor-dark.png" width="200" alt="新建条目" /><br /><sub>新建条目</sub></td>
+    <td align="center"><img src="docs/screenshots/settings-dark.png" width="200" alt="设置" /><br /><sub>设置</sub></td>
+  </tr>
+</table>
+
+桌面小组件（4×2，显示条目数与摘要，点击回到应用）：
+
+<img src="docs/screenshots/widget-dark.png" width="320" alt="桌面小组件" />
+
 ## 自带什么
 
 | 层 | 内容 |
